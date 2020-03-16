@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer');
+const Event = require('../server/db/event');
 
 const url = 'https://www.booksaremagic.net/?q=h.calevents';
 
@@ -16,8 +17,7 @@ const url = 'https://www.booksaremagic.net/?q=h.calevents';
 
       for (let i = 0; i < title.length; i++) {
         let dateTimeText = dateAndTime[i].innerText;
-        // console.log(title[i].innerText)
-        let separateDateAndTime = dateTimeText.split('|')
+        let separateDateAndTime = dateTimeText.split('|');
         let startTime = separateDateAndTime[1].split('-');
 
         eventArray[i] = {
@@ -33,6 +33,10 @@ const url = 'https://www.booksaremagic.net/?q=h.calevents';
     });
 
     console.log(events);
+
+    // await Promise.all(events.map(event => {
+    //   return Event.create(event)
+    // }))
 
     await browser.close();
   } catch (error) {
