@@ -1,6 +1,8 @@
 const router = require('express').Router();
 
-router.use(function (req, res, next) {
+router.use('/events', require('./events'));
+
+router.use((req, res, next) => {
   const err = new Error('Not found.');
   err.status = 404;
   next(err);
