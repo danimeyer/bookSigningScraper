@@ -1,9 +1,9 @@
-const cheerio = require('cheerio');
 const puppeteer = require('puppeteer');
+const Event = require('../db/event');
 
 const url = 'https://www.strandbooks.com/events/';
 
-// SOLUTION USING PUPPETEER
+// UPDATE BELOW CODE --> THE STRAND UPDATED THEIR EVENTS PAGE
 
 (async () => {
   try {
@@ -32,34 +32,15 @@ const url = 'https://www.strandbooks.com/events/';
       return eventArray;
     });
 
-    // Add find or create from Sequelize, find where the url matches, update with current data scraped to ensure latest info
     console.log(events);
+    // events.map((event) => {
+    //   return await Event.findOrCreate({ where: { url: event.eventUrl } });
+    // });
+
+    console.log('Scrape successful')
 
     await browser.close();
   } catch (error) {
     console.error(error);
   }
 })();
-
-// START OF SOLUTION USING CHEERIO
-
-// (async () => {
-//   try {
-//     const browser = await puppeteer.launch();
-//     const page = await browser.newPage();
-//     await page.goto(url);
-//     const content = await page.content();
-//     const $ = cheerio.load(content);
-//     const eventArray = [];
-
-//     $('.events__name').each((idx, elem) => {
-//       const title = $(elem).text();
-//       eventArray.push(title)
-//     })
-
-//     console.log(eventArray)
-
-//   } catch (error) {
-//     console.error(error)
-//   }
-// })()

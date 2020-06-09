@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer');
-const Event = require('../server/db/event');
+const Event = require('../db/event');
 
 const url = 'https://www.booksaremagic.net/?q=h.calevents';
 
@@ -19,7 +19,7 @@ const url = 'https://www.booksaremagic.net/?q=h.calevents';
         let dateTimeText = dateAndTime[i].innerText;
         let separateDateAndTime = dateTimeText.split('|');
         let startTime = separateDateAndTime[1].split('-');
-
+// cannot read property split of undefined error
         eventArray[i] = {
           title: title[i].innerText,
           url: 'https://www.booksaremagic.net/?q=h.calevents',
@@ -32,11 +32,11 @@ const url = 'https://www.booksaremagic.net/?q=h.calevents';
       return eventArray;
     });
 
-    console.log(events);
+    // console.log(events);
 
-    // await Promise.all(events.map(event => {
-    //   return Event.create(event)
-    // }))
+    events.map(async (event) => {
+      return await Event.findOrCreate({ where: { url: event.eventUrl } });
+    });
 
     await browser.close();
   } catch (error) {
