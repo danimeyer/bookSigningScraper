@@ -12,19 +12,21 @@ const url = 'https://www.strandbooks.com/events/';
     await page.goto(url);
 
     let events = await page.evaluate(() => {
-      let title = document.querySelectorAll('.events__name');
-      let date = document.querySelectorAll('.value.date');
-      let time = document.querySelectorAll('span.dtstart .value.time');
-      let eventUrl = document.querySelectorAll('.events__name a');
+      let title = document.querySelectorAll('.eventslist-header__h3');
+      let date = document.getElementsByClassName('eventslist-date__p');
+      // <p class="">Friday June 12 07:00PM-08:00PM EST</p>
+      let eventUrl = document.querySelectorAll('.eventslist-link__link');
 
       let eventArray = [];
 
       for (let i = 0; i < title.length; i++) {
+        let dateAndTime = date[i].innerText.split(' ');
+
         eventArray[i] = {
           title: title[i].innerText,
-          url: eventUrl[i].getAttribute('href'),
-          date: date[i].innerText.slice(0, -1),
-          time: time[i].innerText,
+          url: 'https://www.strandbooks.com' + eventUrl[i].getAttribute('href'),
+          date: dateAndTime.slice(0, 3).join(' '),
+          time: dateAndTime.slice(3).join(' '),
           bookstore: 'The Strand',
         };
       }
@@ -32,10 +34,10 @@ const url = 'https://www.strandbooks.com/events/';
       return eventArray;
     });
 
-    console.log(events);
-    // events.map((event) => {
-    //   return await Event.findOrCreate({ where: { url: event.eventUrl } });
-    // });
+    // console.log(events);
+    events.map(async (event) => {
+      return await Event.findOrCreate({ where: { url: event.eventUrl } });
+    });
 
     console.log('Scrape successful')
 
