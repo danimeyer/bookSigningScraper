@@ -1,9 +1,8 @@
 const puppeteer = require('puppeteer');
 const Event = require('../db/event');
 
-const url = 'https://www.strandbooks.com/events/';
 
-// UPDATE BELOW CODE --> THE STRAND UPDATED THEIR EVENTS PAGE
+const url = 'https://www.strandbooks.com/events/';
 
 (async () => {
   try {
@@ -14,7 +13,6 @@ const url = 'https://www.strandbooks.com/events/';
     let events = await page.evaluate(() => {
       let title = document.querySelectorAll('.eventslist-header__h3');
       let date = document.getElementsByClassName('eventslist-date__p');
-      // <p class="">Friday June 12 07:00PM-08:00PM EST</p>
       let eventUrl = document.querySelectorAll('.eventslist-link__link');
 
       let eventArray = [];
@@ -34,12 +32,27 @@ const url = 'https://www.strandbooks.com/events/';
       return eventArray;
     });
 
+    // await Promise.all(
+    //   events.map(event => {
+    //     let currentUrl = event.url;
+    //     Event.findOrCreate({ where: { url: currentUrl } });
+    //   })
+    // );
+
     // console.log(events);
+
     events.map(async (event) => {
-      return await Event.findOrCreate({ where: { url: event.eventUrl } });
+      try {
+        let currentUrl = event.url;
+
+        // await Event.findOrCreate({ where: { url: currentUrl } });
+        return await Event.create(event);
+      } catch (error) {
+        console.error(error);
+      }
     });
 
-    console.log('Scrape successful')
+    console.log('Scrape successful');
 
     await browser.close();
   } catch (error) {
