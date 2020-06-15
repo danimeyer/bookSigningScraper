@@ -1,7 +1,6 @@
 const puppeteer = require('puppeteer');
 const Event = require('../db/event');
 
-
 const url = 'https://www.strandbooks.com/events/';
 
 (async () => {
@@ -32,20 +31,8 @@ const url = 'https://www.strandbooks.com/events/';
       return eventArray;
     });
 
-    // await Promise.all(
-    //   events.map(event => {
-    //     let currentUrl = event.url;
-    //     Event.findOrCreate({ where: { url: currentUrl } });
-    //   })
-    // );
-
-    // console.log(events);
-
-    events.map(async (event) => {
+    await events.map(async (event) => {
       try {
-        let currentUrl = event.url;
-
-        // await Event.findOrCreate({ where: { url: currentUrl } });
         return await Event.create(event);
       } catch (error) {
         console.error(error);
