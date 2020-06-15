@@ -31,6 +31,7 @@ const url = 'https://www.strandbooks.com/events/';
       return eventArray;
     });
 
+    // Note: below code will generate errors for all repeats, which will happen every time this code runs. This should be optimized at some point
     await events.map(async (event) => {
       try {
         return await Event.create(event);
