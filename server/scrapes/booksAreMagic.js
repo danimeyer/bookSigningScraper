@@ -15,11 +15,11 @@ const url = 'https://www.booksaremagic.net/?q=h.calevents';
 
       let eventArray = [];
 
-      for (let i = 0; i < title.length; i++) {
+      for (let i = 1; i < title.length; i++) {
         let dateTimeText = dateAndTime[i].innerText;
         let separateDateAndTime = dateTimeText.split('|');
         let startTime = separateDateAndTime[1].split('-');
-// cannot read property split of undefined error
+
         eventArray[i] = {
           title: title[i].innerText,
           url: 'https://www.booksaremagic.net/?q=h.calevents',
@@ -32,10 +32,13 @@ const url = 'https://www.booksaremagic.net/?q=h.calevents';
       return eventArray;
     });
 
-    // console.log(events);
-
-    events.map(async (event) => {
-      return await Event.findOrCreate({ where: { url: event.eventUrl } });
+    // Note: below code will generate errors for all repeats, which will happen every time this code runs. This should be optimized at some point
+    await events.map(async (event) => {
+      try {
+        return await Event.create(event);
+      } catch (error) {
+        console.error(error);
+      }
     });
 
     await browser.close();
