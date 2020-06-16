@@ -18,12 +18,13 @@ const url = 'https://www.strandbooks.com/events/';
 
       for (let i = 0; i < title.length; i++) {
         let dateAndTime = date[i].innerText.split(' ');
+        let startTime = dateAndTime.slice(3).join(' ');
 
         eventArray[i] = {
           title: title[i].innerText,
           url: 'https://www.strandbooks.com' + eventUrl[i].getAttribute('href'),
           date: dateAndTime.slice(0, 3).join(' '),
-          time: dateAndTime.slice(3).join(' '),
+          time: startTime.slice(0, 7),
           bookstore: 'The Strand',
         };
       }
