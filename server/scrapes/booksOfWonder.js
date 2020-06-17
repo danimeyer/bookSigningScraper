@@ -3,7 +3,7 @@ const Event = require('../db/event');
 
 const url = 'https://booksofwonder.com/blogs/upcoming';
 
-(async() => {
+(async () => {
   try {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
@@ -11,37 +11,41 @@ const url = 'https://booksofwonder.com/blogs/upcoming';
     await page.goto(url);
 
     let events = await page.evaluate(() => {
-      // Grab title, date, time, url
-      let title
+      let title = document.getElementsByClassName('article-title');
+      let date = document.getElementsByClassName('event-date');
+      let time = document.querySelectorAll('#time');
 
       let eventArray = [];
 
       for (let i = 0; i < title.length; i++) {
+        let eventUrl = title[i].childNodes[0].getAttribute('href');
+
         eventArray[i] = {
-          title: '',
-          url: '',
-          date: '',
-          time: '',
+          title: title[i].innerText,
+          url: 'https://booksofwonder.com' + eventUrl,
+          date: date[i].innerText,
+          time: time[i].innerText,
           bookstore: 'Books of Wonder',
-        }
+        };
       }
 
       return eventArray;
+    });
+
+    // console.log(events); // Remove after testing
+
+    await events.map(async (event) => {
+      try {
+        return await Event.create(event);
+      } catch (error) {
+        console.error(error);
+      }
     })
 
-    console.log(events); // Remove after testing
+    console.log('Scrape successful');
 
-    // await events.map(async (event) => {
-    //   try {
-    //     return await Event.create(event);
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // })
-
-    // console.log('Scrape successful');
-
+    await browser.close();
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
-})
+})();

@@ -3,7 +3,7 @@ const Event = require('../db/event');
 
 const url = '';
 
-(async() => {
+(async () => {
   try {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
@@ -12,7 +12,7 @@ const url = '';
 
     let events = await page.evaluate(() => {
       // Grab title, date, time, url
-      let title
+      let title;
 
       let eventArray = [];
 
@@ -23,11 +23,11 @@ const url = '';
           date: '',
           time: '',
           bookstore: '',
-        }
+        };
       }
 
       return eventArray;
-    })
+    });
 
     console.log(events); // Remove after testing
 
@@ -41,7 +41,8 @@ const url = '';
 
     // console.log('Scrape successful');
 
+    await browser.close();
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
-})
+})();
