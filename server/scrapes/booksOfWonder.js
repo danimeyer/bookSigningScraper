@@ -32,8 +32,6 @@ const url = 'https://booksofwonder.com/blogs/upcoming';
       return eventArray;
     });
 
-    // console.log(events); // Remove after testing
-
     await events.map(async (event) => {
       try {
         return await Event.create(event);
