@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 const Event = require('../db/event');
 
-const url = '';
+const url = 'https://stores.barnesandnoble.com/store/2255';
 
 (async () => {
   try {
@@ -12,7 +12,9 @@ const url = '';
 
     let events = await page.evaluate(() => {
       // Grab title, date, time, url
-      let title;
+      let title = document.getElementsByClassName('lgTitles');
+      let eventGroup = document.getElementsByClassName('col-sm-8 col-md-5 col-lg-5 col-xs-8');
+
 
       let eventArray = [];
 
